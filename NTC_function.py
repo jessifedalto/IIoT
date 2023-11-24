@@ -22,13 +22,13 @@ NTC10K_TEMP = np.array([-55, -50, -45, -40, -35,
                         120, 125],
                        dtype=np.float64)
 
-def funtion(x, a, b, c):
+def function(x, a, b, c):
     return a * np.log(x - b) + c
     # return a / (x -  b) + c
 
-popt, pcov = curve_fit(funtion, NTC10K_RES, NTC10K_TEMP)
+popt, pcov = curve_fit(function, NTC10K_RES, NTC10K_TEMP)
 
-error = np.max(funtion(NTC10K_RES, *popt) - NTC10K_TEMP)
+error = np.max(function(NTC10K_RES, *popt) - NTC10K_TEMP)
 
 print(f"{popt =}error_max = { error}")
 
@@ -36,6 +36,6 @@ x = np.linspace(0, 1250000, 1000)
 
 plt.plot(NTC10K_RES, NTC10K_TEMP)
 
-plt.plot(x, funtion(x, *popt))
+plt.plot(x, function(x, *popt))
 plt.grid()
 plt.show()
