@@ -19,21 +19,17 @@ bool connectWiFi(const char* ssid, const char* pw)
 {
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
-  int qtd_wifi = WiFi.scanNetworks();
-  if(qtd_wifi == 0)
-  {
-    return;
-  }
   WiFi.begin(ssid, pw);
   Serial.print("\nConectando!");
-  int tentativas = 0;
+  int tentativa = 0;
   while (WiFi.status() != WL_CONNECTED)
   {
-    tentativas++;
-    if (tentativas > 300)
+    tentativa++;
+    if (tentativa > 300)
     {
       return false;
     }
+    
     Serial.print(".");
     delay(200);
   }
