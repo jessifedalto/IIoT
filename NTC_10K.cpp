@@ -29,7 +29,7 @@ Vector<float> NTC_10K_res = { 1214600, 844390, 592430, 419380, 299480,
 
 void setup()
 {
-  pinMode(PIN_NTC, input);
+  pinMode(PIN_NTC, INPUT);
   Serial.begin(115200);
 }
 
