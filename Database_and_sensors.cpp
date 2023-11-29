@@ -6,7 +6,7 @@
 
 /*==========Constants=========*/
 const char* WIFI_SSID = "Moto G20";
-const char* WIFI_PW = "jessi0706";
+const char* WIFI_PW = "senha";
 
 /*========Variables=======*/
 FirebaseData fbdo;
