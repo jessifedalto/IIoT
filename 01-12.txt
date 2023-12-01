@@ -1,0 +1,248 @@
+requisição HTTP
+
+carrega os dados no json, porque o banco de dados também é em json. Coloca os dados em um dicionário.
+
+np.nan = é utilizado para saber se é um numero ou não, pois se for definido um valor há a possibilidade de confundir aquele valor com algo que
+na verdade não representa a temperatura.
+
+plot comum = um gráfico e uma imagem
+subplot = faz vários gráficos em uma única imagem
+
+
+
+====================MQTT=====================
+
+Três tipos de componentes: 
+ - Broker: recebe e envia os dados
+ - Publisher: envia os dados para o broker
+ - Subscriber: recebe os dados do Broker
+
+Serve para subdividir as coisas e facilitar as coisas. Ex.: processo produtivo com diversas etapas, se elas estão muito distantes há um atraso no processo
+reconhecer onde estão as coisas dificulta.
+
+Ajuda a manter o sistema estável, não precisa ter um servidor interno aqui da bosch. 
+
+Comunicação direta com o broker, não no servidor
+
+Mosquitto é um broker de código aberto
+
+MQTT = Message Queuing Telemetry Transport. Surgiu na década de 90 para coisas da indústria petrólifica. 
+
+Topico = lugar no nosso broker que irá ficar a nossa mensagem.
+
+Atualmente somos só um publisher, só enviamos informações.
+
+Para enviar uma informação = .publish("Olaa")
+
+============================CODIGO MQTT======================================
+/*=============Includes==========*/
+#include <Arduino.h>
+#include <WiFi.h>
+#include "PubSubClient.h"
+
+/*==========Constants=========*/
+const char* WIFI_SSID = "belisarius";
+const char* WIFI_PW = "senhaaaa";
+ 
+const char* MQTT_BROKER = "test.mosquitto.org";
+const uint16_t MQTT_PORT = 1883;
+const char* MQTT_USERNAME = "";
+const char* MQTT_PASSWORD = "";
+
+/*=======Variables=========*/
+WiFiClient wifi_client;
+PubSubClient mqtt_client(wifi_client);
+
+bool connectWiFi(const char* ssid, const char* pw)
+{
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  WiFi.begin(ssid, pw);
+  Serial.print("\nConectando!");
+  int tentativa = 0;
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    tentativa++;
+    if (tentativa > 300)
+    {
+      return false;
+    }
+    
+    Serial.print(".");
+    delay(200);
+  }
+  Serial.print("\nConectado com o IP: ");
+  Serial.println(WiFi.localIP());
+  return true;
+}
+
+void callback(char* topic, byte* payload, unsigned int length)
+{
+  Serial.printf("Mensagem recebida no tópico %s: ", topic);
+
+  for (int i = 0; i < length; i++)
+  {
+    Serial.print((char)payload[i]);
+  }
+  Serial.println();
+}
+
+
+void setup()
+{
+  Serial.begin(115200);
+  connectWiFi(WIFI_SSID, WIFI_PW);
+
+  mqtt_client.setServer(MQTT_BROKER, MQTT_PORT);
+  mqtt_client.setCallback(callback);
+  mqtt_client.subscribe("testdta");
+
+  while (!mqtt_client.connected())
+  {
+    String client_id = "mqttx_32fef669";
+    client_id += String(WiFi.macAddress());
+
+    if(mqtt_client.connected(client_id.c_str(), MQTT_USERNAME, MQTT_PASSWORD))
+    {
+      Serial.println("Conexao MQTT bem sucedida");
+    }
+  }
+}
+
+void loop()
+{
+  mqtt_client.publish("testdta", "testeee 987");
+
+  //Receber
+
+  mqtt_client.loop();
+
+  delay(5000);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+=================================================================
+
+/*=============Includes==========*/
+#include <Arduino.h>
+#include <WiFi.h>
+#include "FirebaseESP32.h"
+
+/*==========Constants=========*/
+const char* WIFI_SSID = "belisarius";
+const char* WIFI_PW = "senhaaaa";
+
+/*========Variables=======*/
+FirebaseData fbdo;
+FirebaseAuth fbauth;
+FirebaseConfig fbconfig;
+ 
+const uint8_t PIN_NTC1 = 35;
+const uint8_t PIN_NTC2 = 32;
+const uint8_t PIN_LDR = 33;
+
+const uint32_t ADC_MAX = (1 << 12) - 1;
+const float VREF = 3.3f;
+const float R1 = 10000;
+
+const char* FB_HOST = "https://iiot-dta-default-rtdb.firebaseio.com/";
+const char* FB_KEY = "Ag5gJMhAnTWQgDVhegkDRF1uTjJfpMUDkXB8WBEa";
+
+bool connectWiFi(const char* ssid, const char* pw)
+{
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  WiFi.begin(ssid, pw);
+  Serial.print("\nConectando!");
+  int tentativa = 0;
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    tentativa++;
+    if (tentativa > 300)
+    {
+      return false;
+    }
+    
+    Serial.print(".");
+    delay(200);
+  }
+  Serial.print("\nConectado com o IP: ");
+  Serial.println(WiFi.localIP());
+  return true;
+}
+
+void setup()
+{
+  pinMode(PIN_NTC1, INPUT);
+  pinMode(PIN_NTC2, INPUT);
+  pinMode(PIN_LDR, INPUT);
+
+  Serial.begin(115200);
+  connectWiFi(WIFI_SSID, WIFI_PW);
+
+  fbconfig.database_url = FB_HOST;
+  fbconfig.signer.tokens.legacy_token = FB_KEY;
+  fbdo.setBSSLBufferSize(4096, 1024);
+  Firebase.reconnectWiFi(true);
+  Firebase.begin(&fbconfig, &fbauth);
+}
+
+void loop()
+{
+  /*Enviando um unico valor para o banco de dados e analisa se deu certo ou nao*/
+  uint16_t input = analogRead(PIN_LDR);
+  float voltage = input *  VREF / ADC_MAX;
+
+  uint16_t input_value1 = analogRead(PIN_NTC1);
+
+  uint16_t input_value2 = analogRead(PIN_NTC2);
+
+  float voltage1 = input_value1 * VREF / ADC_MAX;
+  
+  float resistence1 = R1 * voltage1 /(VREF - voltage1);
+
+  float voltage2 = input_value2 * VREF / ADC_MAX;
+  
+  float resistence2 = R1 * voltage2 /(VREF - voltage2);
+
+  float resistence = R1 * voltage /(VREF - voltage);
+
+  float a = 12.9611833;
+  float b = -0.0761498101;
+  float c = 3.40889111;
+  float d = -64.5957953;
+  float e = 390.218793;
+  float temperature1 = b*pow((log(resistence1 - a)), 3) + c*pow((log(resistence1-a)), 2) + d * (log(resistence1 - a)) + e;
+
+
+  Serial.printf("\naaaaaaaaaaaaaaaADC: %8i Voltage: %8.2f Resistence: %8.2f Temperature: %8.2f", input_value1, voltage1, resistence1, temperature1); 
+
+  float temperature2 = b*pow((log(resistence2 - a)), 3) + c*pow((log(resistence2-a)), 2) + d * (log(resistence2 - a)) + e;
+
+  Serial.printf("\nADC: %8i Voltage: %8.2f Resistence: %8.2f Temperature: %8.2f", input_value2, voltage2, resistence2, temperature2); 
+
+  FirebaseJson json;
+
+  json.set("/subsys_03/temperature/temp_sensor_00", temperature1);
+  json.set("/subsys_03/temperature/temp_sensor_01", temperature2);
+  json.set("/subsys_03/luminosity", voltage);
+
+
+  bool status = Firebase.updateNode(fbdo, "/iiot-dta", json);
+
+  if (!status)
+  {
+    Serial.printf("\n", fbdo.errorReason().c_str());
+  }
+  delay(15000);
+}

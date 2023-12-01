@@ -1,0 +1,99 @@
+o que é resolução num conversor análogico digital:
+ - conversor de 12 bits, ou seja, ia até 4095;
+ - conversor ideal: conversor lê zero, então minha tensão também é zero;
+ - convertendo para binário há a perca de precissão;
+ - quanto maior a resolução, mais perto da representação real;
+ - nível de não-linearidade é ruim no nosso conversor, significa que a reta é não linear, tem certa curvatura;
+ 
+Precisão e exatidão (acuracia, viés)
+Precisão = todas as vezes que há a medição, os valores são parecidos, disperção muito baixa;
+Exatidão = alta dispersão e afastados do valor correto; balança com alta exatidão e baixa precisão;
+Balança com alta precisão e baixa exatidão = valores muito próximos, mas longe do que esta de fato occorendo
+
+Melhorar exatidão = mapear a entrada correta e a saída falsa, fazer uma calibração;
+Melhorar precisão = qualidade dos componentes e montagem, única forma é comprando um sensor melhor, ou testar várias vezes e fazer uma média.
+
+===========================================================SENSORES=========================================================
+Sensores Resistivos:
+ - LDR e NTC;
+ - São versáteis;
+ - Simplicidade, são muito pequenos, ex.: sensor de temperatura de motor de combustão interna, centenas de sensores.
+ - Tempo de resposta muito rápida;
+
+Sensores Luminosos:
+ - LDR: pode calibrar para qualquer coisa.
+ - FotoDiodo: funciona no infravermelho.
+ - FotoTransistor: quando tem luz, deixa passar energia pelo transistor, detector de obstáculo.
+
+Sensores capacitivo e indutivo: usado para detecção de obstáculos
+ - Capacitivo: detecta qualquer coisa;
+ - Indutivo: detecta apenas metal; 
+
+Sensor ultrassônico: detecta obstáculo e também mede a distância do objeto até o sensor. Funciona com líquidos, diferente dos outros.
+Medir o quão cheio ou vazio está o reservatório.
+
+Sensor acelerometro: mede aceleração, sabendo a velocidade e a posição inicial, sabemos a velocidade a qualquer momento.
+Pode medir rotação dele em cada eixo também. Usado principlamente para medir vibração. Usado para manutenção preventiva, manutenção preditiva.
+
+DHT: tem um sensor NTC interno, possui um controlador tipo esp, muito pequeno para passar por comunicação serial. 
+
+Termo-par: industrial, mais resistente e à prova d'água, utilizado para medir temperatura do óleo de motor. Se o óleo tá aquecendo muito, significa
+que está faltando óleo.
+
+Sensor de pressão: tubos de dois lados, pressão diferencial, ar comprimido em relação à atmosfera, comparar as pressões.
+
+Sensor de gás: tem sensor para amonia,, monoxido de carbono, c02, etc.. Medição da qualidade de ar, medição de vazamento. 
+Como identificar qual o tipo de gás ele identifica? pelo datasheet.
+
+========================================Wi-fi + Firebase===================================
+DataLake: pegar os dados e colocar lá.
+Como passar os dados:
+ - Comunicação cabeada: sensíveis a ruído externo, e o que mais tem na indústria é ruído.
+ - Comunicação wire-less: comunicação digital, ou seja, 0 e 1, não causa muito ruído. Sistema corretivo: manda informação comprimida do que foi enviado, ou seja, sistema anti-erro.
+ Bluetooth = usado para coisas que estão relativamente próximas, consegue passar muitos dados por segundo.
+ Bluetooh de baixa energia (BLE) = usado em Iot
+ Wi-fi = 500m em um ambiente ideal, utilização de bibliotecas;
+ LoRaWAN = distância de até 10km, quantidade de informação depende da distância, necessita ter receptor específico;
+
+ Cosnt como argumento: "fala" que não vai mudar o parametro dentro da função.
+
+ ESP tem pinos específicos, ADC1_1,2,3,4,5,6 ou ADC2_1,2,3,4,5. A ESP usa os pinos ADC2_ para Wi-Fi, ou seja, não é possível utilizar para fazer a conversão analógico/digital.
+ Comunicação Wi-Fi: leva menos tempo, você leva e recebe pacotes, mandar requisição em pequenos pacotes, uma para cada eles.
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
