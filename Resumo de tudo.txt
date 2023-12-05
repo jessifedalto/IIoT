@@ -1,0 +1,65 @@
+=================IIOT==============
+ - Compreender eletrônica básica: saber como funciona uma protoboard, circuito eletrônico, porque utilziar resistor, montagem de circuito,
+reconhecer as portas da ESP. Todas as portas da ESP funcionam como digitais, mas algumas em específico são só 
+
+ - Compreender microcontroladores: compreender o que é uma ESP: arduino e Esp: as duas são microcontroladores, processador da esp muito melhor
+e tem bluetooh e wi-fi já integrados, não precisa de um módulo como o arduino.
+raspberry py é um microcomputador, roda melhor que a esp.
+
+ - Aplicar o controle de saída de dados baseado em condições: se acontecer alguma coisa acende um led, ex.: temperatura acima de 25, ascende um led 
+
+ - Aplicar a leitura de sinais digitais: digitalRead
+
+ - Aplicar a leitura de sinais analógicos: analogRead. Valor máximo do conversor: resolução de 12 bits, valor máximo que o analogRead me retorna 4095
+
+ - Compreender os fundamentos de leitura de sensores: Maior resolução: dados mais fidedignos a realidade. Taxa de amostragem, pegar uma maior quantidade de dados em uma determinada quantidade de tempo.
+
+ LEITURA DO NTC: fazer leitura analogica, achar a tensão, achar a resistencia, duas formas de achar a temperatura: interpolação e regressão, 
+interpolação: não tem conhecimento do erro
+regressão: é muito mais rápido e ocupa menos memória, e tem conhecimento do erro.
+curve fit: achar função que mais se adeque ao meu gráfico.
+
+ - Compreender a calibração de conversores analógicos-digitais (ADC): conversor da ESP não é perfeito, caso ideal: tensão de entrada = 1.5 ADC read = 1.5. 
+
+ - Reconhecer o sensor mais adequado para cada aplicação: PTC e NTC, diferença, sensor indutivo, capacitivo, de luminosidade.
+
+ - Elaborar um plano de sensoriamento: saber qual sensor utilizar e como utilizá-lo.
+
+ - Compreender os protocolos HTTP e MQTT: para que usar o HTTP - passa textos, qualquer texto e pode colocar qualquer coisa nesse texto, pode passar
+um banco de dados inteiro se você quiser. Ele tem alguns códigos, requisição HTTP retorna alguns códigos, até mesmo erros, 200 = deu certo. 400 = erro do proxy. 500 = erro do servidor
+
+MQTT: pequenos textos, texto em sim ou json(como estrutura de dados), ele é rápido e foi feito para comunicação de máquinas. Máquina para central, e central vai enviar informação para as máquinas também. Sistema que envia e recebe informações
+Publisher: quem envia. 
+Subscriber: quem recebe
+Broker: manda alguma coisa para o subscriber
+Ex.: torno mecânico, sensor de porta, de posição e de rotação. Como se fosse uma única ESP. Junta as duas ESP para enviar para o Broker, uma fala do sensor da máquina e outra da fiação(Publisher).
+
+ - Integrar um sistema utilizando MQTT: enviar e receber utilizando a ESP, e visualizar pelo MQTTX,  
+
+ - Compreender as aplicações de Real Time Database: porque utilizar: armazenamento de dados em tempo real, saber o que está acontecendo com os sensores.
+
+ - Integrar as aplicações de Real Time Database: enviar dados pela ESP para o banco de dados.
+
+ - Aplicar a leitura de dados de um RTDB utilizando GET request e firebase-admin: receber e ler dados, calcular a média, utilizando o python
+
+ - Elaborar dashboards: fazer gráfico bonitinho em tempo real. Identificar o valor dados e qual é o dado.  
+
+ - Monitorar eventos críticos: alerta que algo está errado.
+
+ - Estimar a correlação entre os dados: achar a temperatura maxima, minima e media, calcular desvio padrao entre dois dados. 
+
+
+conversores analógicos-digitais (ADC): resolução maior, mais fidedigno ao valor real. 
+
+precisão: tem conscistência dentro do que ele mede. Como corrigir: ler muitos dados e fazer uma média ou pegar um dado só, ou tendo um componente melhor.
+
+exatidão: estar próximo da realidade. Como corrigir: calibração.
+
+
+Por dificuldade:
+ - Integrar: 
+ - Aplicar: conhece, sabe como funciona e consegue utilizar ela
+ - Elaborar: conhece, sabe como funciona e consegue utilizar ela
+ - Compreender:
+ - Reconhecer: 
+  
